@@ -1,84 +1,187 @@
-<!DOCTYPE html>
-<html lang="en">
-
+<html>
 <head>
-    <meta name="description"
-        content="This is my Personal Website. It uses HTML, CSS & JavaScript to run this particular website.">
-    <meta charset="utf-8">
-    <title>Kashyap Website</title>
+    <style>
+        pre{
+
+            font-size:14px;
+            font-weight:400;
+            letter-spacing:0;
+            line-height:1.28581;
+            text-transform:none;
+            color:#182026;
+            font-family: 'JetBrains Mono';
+        }        
+    </style>
 </head>
-
 <body>
-    <table cellspacing="20">
-        <tr>
-            <td>
-                <img src="211498512_173231014854124_3043484128415301030_n-modified.png" alt="Kashyap Sriram"
-                    height="160px" width="160px">
-            </td>
-            <td>
-                <h1>Kashyap Sriram</h1>
-                <p><em>Class XII.<strong> Science <u>A</u> Student</strong></em></p>
-                <p>I am an Web Developing Student. Learning From <a href="https://www.udemy.com/">UDEMY.</a></p>
-            </td>
-        </tr>
-    </table>
-    <hr>
-    <h3>Education</h3>
-    <ul>
-        <li>Learning & Excelling in <a href="https://www.rfs.edu.in">KDARFS.</a></li>
-        <li>Mathematics Student.</li>
-    </ul>
-    <hr>
-    <h3>Work Experience</h3>
-    <table border='1' cellpadding="2">
-        <thead>
-            <tr>
-                <th>Dates</th>
-                <th>Work</th>
-            </tr>
-        </thead>
-        <tr>
-            <td>2020</td>
-            <td>Started Programming.</td>
-        </tr>
-        <tr>
-            <td>2020-2022</td>
-            <td>Learning HTML & CSS.</td>
-        </tr>
-    </table>
-    <hr>
-    <h3>Skills</h3>
-    <table cellspacing="10">
-        <tr>
-            <td>
-                <table>
-                    <tr>
-                        <td>Web Developing</td>
-                        <td>⭐⭐⭐</td>
-                    </tr>
-                    <tr>
-                        <td>iOS Developing</td>
-                        <td>⭐</td>
-                    </tr>
-                </table>
-            </td>
-            <td>
-                <table>
-                    <tr>
-                        <td>Computer Programming</td>
-                        <td>⭐⭐</td>
-                    </tr>
-                    <tr>
-                        <td>Android Developing</td>
-                        <td>⭐</td>
-                    </tr>
-                </table>
-            </td>
-        </tr>
-    </table>
-    <hr>
-    <h4><a href="hobbies.html">Hobbies</a></h4>
-    <h4><a href="contact.html">Contact Me</a></h4>
+    <pre>
+    1: import mysql.connector
+    2: import datetime
+    3: 
+    4: standard_rooms = ["73" + str(i).zfill(2) for i in range(1, 31)]
+    5: 
+    6: deluxe_rooms = ["74" + str(i).zfill(2) for i in range(1, 26)]
+    7: 
+    8: suite_rooms = ["75" + str(i).zfill(2) for i in range(1, 11)]
+    9: 
+   10: db = mysql.connector.connect(
+   11:     host="localhost",
+   12:     user="root",
+   13:     password="admin",
+   14:     database="hotel_booking_system"
+   15: )
+   16: 
+   17: cursor = db.cursor()
+   18: 
+   19: cursor.execute(
+   20:     '''
+   21:     CREATE TABLE IF NOT EXISTS hotel_bookings(
+   22:         booking_id int PRIMARY KEY AUTO_INCREMENT,
+   23:         guest_name varchar(255) NOT NULL,
+   24:         number_of_guests int,
+   25:         check_in_date date NOT NULL,
+   26:         check_out_date date NOT NULL,
+   27:         room_type varchar(50),
+   28:         special requests text,
+   29:         total_rate decimal(10,2) NOT NULL,
+   30:         payment_mode varchar(50),
+   31:         verification_document varchar(255),
+   32:         check_out_time timestamp,
+   33:         room_number varchar(10)
+   34:     );
+   35:     '''
+   36: )
+   37: 
+   38: def calculate_rate(check_in_date, check_out_date, room_type,number_of_guests):
+   39:     rates = {"standard": 100, "deluxe": 150, "suite": 200}
+   40:     rate_per_night = rates.get(room_type.lower(), 100) 
+   41:     check_in = datetime.datetime.strptime(check_in_date, "%Y-%m-%d")
+   42:     check_out = datetime.datetime.strptime(check_out_date, "%Y-%m-%d")
+   43:     num_nights = (check_out - check_in).days
+   44:     total_rate = rate_per_night * num_nights
+   45:     return total_rate
+   46: 
+   47: def book_hotel():
+   48:     guest_name = input("Enter guest name: ")
+   49:     check_in_date = input("Enter check-in date (YYYY-MM-DD): ")
+   50:     check_out_date = input("Enter check-out date (YYYY-MM-DD): ")
+   51:     room_type = input("Enter room type (standard/deluxe/suite): ")
+   52:     special_requests = input("Enter special requests (if any): ")
+   53:     payment_mode = input("Enter payment mode (e.g., credit card, cash): ")
+   54:     verification_document = input("Enter verification document (e.g., driver's license, passport): ")
+   55:     number_of_guests = int(input("Enter the number of guests: "))  
+   56: 
+   57:     total_rate = calculate_rate(check_in_date, check_out_date, room_type, number_of_guests)
+   58: 
+   59:     if room_type.lower() == "standard":
+   60:         if standard_rooms:
+   61:             room_number = standard_rooms.pop(0)
+   62:         else:
+   63:             print("No available standard rooms. Booking failed.")
+   64:             return
+   65:     elif room_type.lower() == "deluxe":
+   66:         if deluxe_rooms:
+   67:             room_number = deluxe_rooms.pop(0)
+   68:         else:
+   69:             print("No available deluxe rooms. Booking failed.")
+   70:             return
+   71:     elif room_type.lower() == "suite":
+   72:         if suite_rooms:
+   73:             room_number = suite_rooms.pop(0)
+   74:         else:
+   75:             print("No available suite rooms. Booking failed.")
+   76:             return
+   77:     else:
+   78:         print("Invalid room type. Booking failed.")
+   79:         return
+   80: 
+   81:     insert_query = """
+   82:     INSERT INTO hotel_bookings 
+           (guest_name, check_in_date, check_out_date, room_type, room_number, special_requests, 
+           total_rate, payment_mode, verification_document, check_out_time, number_of_guests)
+   83:     VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+   84:     """
+   85:     values = (guest_name, check_in_date, check_out_date, room_type, room_number, special_requests, 
+           total_rate, payment_mode, verification_document, None, number_of_guests)
+   86:     cursor.execute(insert_query, values)
+   87:     db.commit()
+   88: 
+   89:     print(f"Booking successful! Room number: {room_number}")
+   90:     print("============================================")
+   91: 
+   92: def view_bookings():
+   93:     cursor.execute("SELECT * FROM hotel_bookings")
+   94:     bookings = cursor.fetchall()
+   95:     if not bookings:
+   96:         print("No bookings found.")
+   97:         print("============================================")
+   98:     else:
+   99:         print("============================================")
+   100:         for booking in bookings:
+   101:             booking_id, guest_name, number_of_guests, check_in_date, check_out_date, room_type, special_requests, 
+                    total_rate, payment_mode, verification_document, check_out_time, room_number = booking
+   102:             print(f"Booking ID: {booking_id}")
+   103:             print(f"Room Number: {room_number}")
+   104:             print(f"Guest Name: {guest_name}")
+   105:             print(f"Check-in Date: {check_in_date}")
+   106:             print(f"Check-out Date: {check_out_date}")
+   107:             print(f"Room Type: {room_type}")
+   108:             print(f"Special Request: {special_requests}")
+   109:             print(f"Number of Guests: {number_of_guests}")
+   110:             print(f"Total Rate: ${total_rate}")
+   111:             print(f"Payment Mode: {payment_mode}")
+   112:             print(f"Verification Document: {verification_document}")
+   113:             print("============================================")
+   114:             if check_out_time:
+   115:                 print(f"Check-out Time: {check_out_time}")
+   116:                 print("‼GUEST HAS CHECKED OUT‼")
+   117:                 print("============================================")
+   118:             print("\n")
+   119: 
+   120: def check_out_guest():
+   121:     print("============================================")
+   122:     booking_id = input("Enter Booking ID: ")
+   123:     guest_name = input("Enter Guest Name: ")
+   124: 
+   125:     current_time = datetime.datetime.now()
+   126:     update_query = """
+   127:     UPDATE hotel_bookings
+   128:     SET check_out_time = %s
+   129:     WHERE booking_id = %s AND guest_name = %s
+   130:     """
+   131:     values = (current_time, booking_id, guest_name)
+   132:     cursor.execute(update_query, values)
+   133:     db.commit()
+   134: 
+   135:     if cursor.rowcount > 0:
+   136:         print("Guest has checked out.✅")
+   137:     else:
+   138:         print("Booking not found or guest name does not match.")
+   139:     print("============================================")
+   140: 
+   141: while True:
+   142:     print("***THE⁕PLAZA***")
+   143:     print("***NEW YORK***")
+   144:     print("Hotel Booking System Menu:")
+   145:     print("1. Book a Hotel Room")
+   146:     print("2. View Bookings")
+   147:     print("3. Check Out Guest")
+   148:     print("4. Exit")
+   149:     choice = input("Enter your choice (1/2/3/4): ")
+   150:     print("============================================")
+   151: 
+   152:     if choice == "1":
+   153:         book_hotel()
+   154:     elif choice == "2":
+   155:         view_bookings()
+   156:     elif choice == "3":
+   157:         check_out_guest()
+   158:     elif choice == "4":
+   159:         break
+   160:     else:
+   161:         print("Invalid choice. Please try again.")
+   162: 
+   163: db.close() 
+</pre>  
 </body>
-
 </html>
