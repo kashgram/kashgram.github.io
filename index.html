@@ -1,32 +1,26 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>Open Multiple Links</title>
-  <style>
-    body{font-family:system-ui,Arial,sans-serif;display:flex;align-items:center;justify-content:center;height:100vh;margin:0;background:#f7f7f7}
-    .card{background:#fff;padding:20px;border-radius:12px;box-shadow:0 6px 18px rgba(0,0,0,0.08);text-align:center;max-width:480px}
-    button{font-size:16px;padding:12px 18px;border-radius:10px;border:0;cursor:pointer}
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Redirect Chain Page</title>
 </head>
 <body>
-  <div class="card">
-    <h1>Open all links</h1>
-    <p>Tap the button below once. Your browser may ask to allow popups or open new tabs — please allow it.</p>
-    <button id="openBtn">Open links</button>
-  </div>
+    <h1>Welcome to My Page</h1>
+    <p>Opening additional links...</p>
 
-  <script>
-    const urls = [
-      "https://aiskillshouse.com/student/qr-mediator.html?uid=5943&promptId=6",
-      "https://aiskillshouse.com/student/qr-mediator.html?uid=4592&promptId=6",
-      "https://aiskillshouse.com/student/qr-mediator.html?uid=4592&promptId=6"
-    ];
-    document.getElementById('openBtn').addEventListener('click', function(){
-      // Stagger opens slightly to reduce chance of popup blocking
-      urls.forEach((u,i) => setTimeout(() => window.open(u, '_blank'), i * 350));
-      this.textContent = 'Opening...'; this.disabled = true;
-    });
-  </script>
+    <script>
+        // Array of URLs to open
+        const urls = [
+            'https://aiskillshouse.com/student/qr-mediator.html?uid=5334&promptId=6',
+            'https://aiskillshouse.com/student/qr-mediator.html?uid=4592&promptId=6',
+            'https://aiskillshouse.com/student/qr-mediator.html?uid=5943&promptId=6'
+        ];
+
+        // Open each URL in a new tab
+        urls.forEach(url => {
+            window.open(url, '_blank');
+        });
+    </script>
 </body>
 </html>
